@@ -99,7 +99,6 @@ This state will remove JOSM jar file from GNU/Linux and MacOS.
 This state will remove JOSM configuration on GNU/Linux and MacOS.
 
 ``josm.clean``
-``josm.clean``
 ^^^^^^^^^^^^^^^^^
 
 *Meta-state (This is a state that includes other states)*.
