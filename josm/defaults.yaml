@@ -1,0 +1,39 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+josm:
+  version: tested
+  dir:
+    jar: /usr/local
+    macapp: /usr/local
+  config_file: None
+  config: {}
+  environ_file: /etc/default/josm.sh
+  environ: []
+  identity:
+    rootuser: root
+    rootgroup: root
+
+  pkg:
+    name: josm
+    format: jar
+    suffix: jar
+    tag: ''
+    use_upstream_repo: false
+    use_upstream_jar: true
+    use_upstream_package: false
+    use_upstream_macapp: false
+    uri: https://josm.openstreetmap.de
+    macapp:
+      skip_verify: true   # see https://josm.openstreetmap.de/ticket/19101#ticket
+    jar:
+      source: 'set by map.jinja'
+      source_hash: None
+      trim_output: true
+      skip_verify: true   # see https://josm.openstreetmap.de/ticket/19101#ticket
+  retry_option:
+    # https://docs.saltstack.com/en/latest/ref/states/requisites.html#retrying-states
+    attempts: 3
+    until: true
+    interval: 10
+    splay: 10

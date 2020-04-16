@@ -1,0 +1,67 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Setup variables using grains['os_family'] based logic.
+# You just need to add the key:values for an `os_family` that differ
+# from `defaults.yaml`.
+# Only add an `os_family` which is/will be supported by the formula
+#
+# If you do not need to provide defaults via the `os_family` grain,
+# you will need to provide at least an empty dict in this file, e.g.
+# osfamilymap: {}
+---
+{%- if grains.os == 'MacOS' %}
+    {%- set macos_rootuser = salt['cmd.run']("stat -f '%Su' /dev/console") %}
+    {%- set macos_rootgroup = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
+{%- endif %}
+
+            {%- if 'oscodename' in grains %}
+Debian:
+  pkg:
+    use_upstream_repo: True
+    use_upstream_jar: false
+    deps:
+      - apt-transport-https
+    repo:
+      humanname: JOSM Repository for Ubuntu
+      name: deb https://josm.openstreetmap.de/apt {{ grains.oscodename }} universe
+      dist: {{ grains['oscodename'] }}
+      file: /etc/apt/sources.list.d/josm.list
+      key_url: https://josm.openstreetmap.de/josm-apt.key
+      keyserver: keyserver.ubuntu.com
+
+Suse:
+  pkg:
+    use_upstream_repo: True
+    use_upstream_jar: false
+    repo:
+      name: Application:Geo
+      humanname: Application:Geo $releasever - $basearch
+      baseurl: https://download.opensuse.org/repositories/Application:/Geo/{{ oscodename | replace(' ','_') }} 
+      key_url: https://download.opensuse.org/repositories/Application:/Geo/{{ oscodename | replace(' ','_') }}/repodata/repomd.xml.key # noqa 204
+      gpgcheck: 1
+      gpgautoimport: True
+            {%- endif %}
+
+Windows:
+  version: setup
+  pkg:
+    use_upstream_macapp: false
+    use_upstream_package: false
+    use_upstream_jar: false
+    tag: windows
+    format: exe
+    suffix: exe 
+
+MacOS:
+  version: macosx      # macapp
+  identity:
+    rootuser: {{ macos_rootuser | d('') }}
+    rootgroup: {{ macos_rootgroup | d('') }}
+  pkg:
+    use_upstream_macapp: true
+    use_upstream_package: false  # homebrew
+    use_upstream_jar: false
+    tag: download/macosx
+    format: zip
+    suffix: zip

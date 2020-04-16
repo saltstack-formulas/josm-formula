@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+josm:
+  version: latest   # or tested or macosx or ''
+  environ:
+    a: b
+  pkg:
+    use_upstream_jar: true
+    use_upstream_package: false
+    use_upstream_macapp: false
+    uri: https://josm.openstreetmap.de
+    macapp:
+      skip_verify: true   # see https://josm.openstreetmap.de/ticket/19101#ticket
+    jar:
+      skip_verify: true   # see https://josm.openstreetmap.de/ticket/19101#ticket
