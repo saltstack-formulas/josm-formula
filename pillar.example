@@ -2,11 +2,12 @@
 # vim: ft=yaml
 ---
 josm:
-  version: latest   # or tested or macosx or ''
+  version: tested   # latest or tested or macosx or ''
   environ:
     a: b
   pkg:
     use_upstream_jar: true
+    use_upstream_repo: false   # suse and debian
     use_upstream_package: false
     use_upstream_macapp: false
     uri: https://josm.openstreetmap.de

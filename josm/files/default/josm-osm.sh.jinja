@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+########################################################################
+# File managed by Salt at <{{ source }}>.
+# Your changes may be overwritten.
+########################################################################
+
+# Run josm for Open Street Map
+    {%- if grains.kernel|lower == 'darwin' %}
+
+java -Djosm.home=${HOME}/.josm_osm -jar {{ path }}/JOSM.app/Contents/Java/josm-snapshot-*.jar
+
+    {%- else %}
+
+java -Djosm.home=${HOME}/.josm_osm -jar {{ path }}/josm.jar
+
+    {%- endif %}

@@ -24,11 +24,17 @@ Debian:
       - apt-transport-https
     repo:
       humanname: JOSM Repository for Ubuntu
-      name: deb https://josm.openstreetmap.de/apt {{ grains.oscodename }} universe
+      name: deb https://josm.openstreetmap.de/apt {{ 'alldist' if grains.os in ('Debian',) else grains.oscodename }} universe
       dist: {{ grains['oscodename'] }}
       file: /etc/apt/sources.list.d/josm.list
       key_url: https://josm.openstreetmap.de/josm-apt.key
       keyserver: keyserver.ubuntu.com
+
+RedHat:
+  pkg:
+    use_upstream_repo: false
+    use_upstream_jar: true
+    use_upstream_package: false
 
 Suse:
   pkg:
@@ -37,8 +43,8 @@ Suse:
     repo:
       name: Application:Geo
       humanname: Application:Geo $releasever - $basearch
-      baseurl: https://download.opensuse.org/repositories/Application:/Geo/{{ oscodename | replace(' ','_') }} 
-      key_url: https://download.opensuse.org/repositories/Application:/Geo/{{ oscodename | replace(' ','_') }}/repodata/repomd.xml.key # noqa 204
+      baseurl: https://download.opensuse.org/repositories/Application:/Geo/{{ grains.oscodename | replace(' ','_') }} 
+      key_url: https://download.opensuse.org/repositories/Application:/Geo/{{ grains.oscodename | replace(' ','_') }}/repodata/repomd.xml.key # noqa 204
       gpgcheck: 1
       gpgautoimport: True
             {%- endif %}
@@ -58,10 +64,13 @@ MacOS:
   identity:
     rootuser: {{ macos_rootuser | d('') }}
     rootgroup: {{ macos_rootgroup | d('') }}
+  environ_file: /etc/defaults/josm.sh
   pkg:
     use_upstream_macapp: true
-    use_upstream_package: false  # homebrew
+    use_upstream_package: false  # there is a homebrew package
     use_upstream_jar: false
     tag: download/macosx
     format: zip
     suffix: zip
+    macapp:
+      skip_verify: true

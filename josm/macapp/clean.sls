@@ -10,7 +10,7 @@ josm-macos-app-clean-files:
   file.absent:
     - names:
       - {{ josm.dir.tmp }}
-      - /Applications/JOSM*
+      - /Applications/JOSM.app
 
     {%- else %}
 

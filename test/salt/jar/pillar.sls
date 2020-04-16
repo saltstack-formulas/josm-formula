@@ -4,7 +4,7 @@
 josm:
   version: tested
   pkg:
-    use_upstream_jar: false
-    use_upstream_repo: true
-    use_upstream_package: true
+    use_upstream_jar: true
+    use_upstream_repo: false
+    use_upstream_package: false
     use_upstream_macapp: false

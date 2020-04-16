@@ -7,9 +7,11 @@
 include:
             {%- if josm.pkg.use_upstream_macapp %}
   - .macapp
+  - .config
             {%- elif josm.pkg.use_upstream_jar %}
   - .jar
   - .config
             {%- else %}
   - .package
+  - .config.script
             {%- endif %}

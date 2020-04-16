@@ -12,4 +12,5 @@ include:
   - .config.clean
                   {%- else %}
   - .package.clean
+  - .config.script.clean
                   {%- endif %}

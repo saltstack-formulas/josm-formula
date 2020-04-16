@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 
-  {%- if grains.os_family == 'MacOS' %}
+    {%- if grains.os_family == 'MacOS' %}
 
 {%- set tplroot = tpldir.split('/')[0] %}
 {%- from tplroot ~ "/map.jinja" import josm with context %}
+{%- from tplroot ~ "/files/macros.jinja" import format_kwargs with context %}
 
 josm-macos-app-install-curl:
   file.directory:
@@ -12,7 +13,7 @@ josm-macos-app-install-curl:
     - makedirs: True
     - clean: True
   pkg.installed:
-    - name: curl
+    - names: {{ josm.pkg.deps|json }}
   cmd.run:
     - name: curl -Lo {{ josm.dir.tmp }}/josm-{{ josm.version }} {{ josm.pkg.macapp.source }}
     - unless: test -f {{ josm.dir.tmp }}/josm-{{ josm.version }}
@@ -21,11 +22,11 @@ josm-macos-app-install-curl:
       - pkg: josm-macos-app-install-curl
     - retry: {{ josm.retry_option }}
 
-      # Check the hash sum. If check fails remove
-      # the file to trigger fresh download on rerun
+        {%- if not josm.pkg.macapp.skip_verify %}
+
 josm-macos-app-install-checksum:
   module.run:
-    - onlyif: {{ josm.pkg.macapp.source_hash }}
+    - onlyif: {{ josm.pkg.macapp.source_hash and not josm.pkg.macapp.skip_verify }}
     - name: file.check_hash
     - path: {{ josm.dir.tmp }}/josm-{{ josm.version }}
     - file_hash: {{ josm.pkg.macapp.source_hash }}
@@ -38,6 +39,9 @@ josm-macos-app-install-checksum:
     - onfail:
       - module: josm-macos-app-install-checksum
 
+        {%- endif %}
+        {%- if josm.pkg.format in ('dmg', 'pkg') %}
+
 josm-macos-app-install-macpackage:
   macpackage.installed:
     - name: {{ josm.dir.tmp }}/josm-{{ josm.version }}
@@ -49,6 +53,26 @@ josm-macos-app-install-macpackage:
     - onchanges:
       - cmd: josm-macos-app-install-curl
 
+        {%- else %}
+
+josm-macos-app-install-archive:
+  archive.extracted:
+    {{- format_kwargs(josm.pkg.macapp) }}
+    - retry: {{ josm.retry_option }}
+    - user: {{ josm.identity.rootuser }}
+    - group: {{ josm.identity.rootgroup }}
+    - force: True
+    - onchanges:
+      - cmd: josm-macos-app-install-curl
+  file.absent:
+    - names:
+      - {{ josm.pkg.macapp.name }}/CONTRIBUTION
+      - {{ josm.pkg.macapp.name }}/LICENSE
+      - {{ josm.pkg.macapp.name }}/README
+    - onchanges:
+      - archive: josm-macos-app-install-archive
+
+        {%- endif %}
     {%- else %}
 
 josm-macos-app-install-unavailable:

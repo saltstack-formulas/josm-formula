@@ -6,8 +6,10 @@ josm:
   dir:
     jar: /usr/local
     macapp: /usr/local
+    tmp: /tmp/josm
   config_file: None
-  config: {}
+  config:
+    path: /usr/local/share/josm
   environ_file: /etc/default/josm.sh
   environ: []
   identity:
@@ -15,6 +17,8 @@ josm:
     rootgroup: root
 
   pkg:
+    deps:
+      - curl
     name: josm
     format: jar
     suffix: jar
@@ -25,10 +29,14 @@ josm:
     use_upstream_macapp: false
     uri: https://josm.openstreetmap.de
     macapp:
+      source: 'set by map.jinja'
+      source_hash: 0c008bce6fa4f0e8dfc616282dcc3c0b824afd45914adf3584e1bac6770e9cda
+      trim_output: true
       skip_verify: true   # see https://josm.openstreetmap.de/ticket/19101#ticket
+      enforce_toplevel: false
     jar:
       source: 'set by map.jinja'
-      source_hash: None
+      source_hash: 4157f85a4fc8076dd78787dde1b0a610f43519da9273e406010795666b403610
       trim_output: true
       skip_verify: true   # see https://josm.openstreetmap.de/ticket/19101#ticket
   retry_option:

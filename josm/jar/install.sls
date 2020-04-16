@@ -5,12 +5,9 @@
 {%- from tplroot ~ "/map.jinja" import josm with context %}
 {%- from tplroot ~ "/files/macros.jinja" import format_kwargs with context %}
 
-include:
-  - josm.config.script
-
 josm-package-jar-install-extract:
   pkg.installed:
-    - name: unzip
+    - names: {{ josm.pkg.deps|json }}
   file.directory:
     - unless: test -d {{ josm.pkg.jar.name }}
     - name: {{ josm.pkg.jar.name }}
@@ -19,12 +16,18 @@ josm-package-jar-install-extract:
     - mode: 755
     - makedirs: True
     - require_in:
-      - jar: josm-package-jar-install-extract
-  archive.extracted:
-    {{- format_kwargs(josm.pkg.jar) }}
-    - archive_format: {{ josm.pkg.format }}
+      - cmd: josm-package-jar-install-extract
+  cmd.run:
+    - names:
+      - curl -Lo {{ josm.pkg.jar.name }}/josm.jar {{ josm.pkg.jar.source }}
+      - chmod 640 {{ josm.pkg.jar.name }}/josm.jar
     - retry: {{ josm.retry_option }}
     - user: {{ josm.identity.rootuser }}
     - group: {{ josm.identity.rootgroup }}
+  module.run:
+    - name: file.check_hash
+    - path: {{ josm.pkg.jar.name }}/josm.jar
+    - file_hash: {{ josm.pkg.jar.source_hash }}
     - require:
-      - sls: josm.config.script
+      - cmd: josm-package-jar-install-extract
+    - onlyif: {{ 'source_hash' in josm.pkg.jar and not josm.pkg.jar.skip_verify }}

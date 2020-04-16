@@ -14,7 +14,12 @@ josm-formula
    :scale: 100%
    :target: https://github.com/semantic-release/semantic-release
 
-Formula to install JOSM Community edition on GNU/Linux and MacOS.
+Formula to install JavaOpenStreetMap (JOSM) on GNU/Linux and MacOS.
+
+Two bonus scripts are installed:
+
+- /usr/local/bin/josm-osm.sh for openstreetmap perhaps
+- /usr/local/bin/josm-ohm.sh for openhistoricalmap perhaps
 
 .. contents:: **Table of Contents**
    :depth: 1
@@ -51,28 +56,49 @@ Available states
 
 *Meta-state (This is a state that includes other states)*.
 
-This installs JOSM package (script/brew) from archive.
+This installs JOSM package on GNU/Linux and MacOS.
+
+``josm.config``
+^^^^^^^^^^^^^^^
+
+This state configure environment (if provided) and bonus scripts (josm-osm.sh, josm-ohm.sh) on GNU/Linux and MacOS.
+
+``josm.jar``
+^^^^^^^^^^^^^^^^^^^
+
+This state will install JOSM jar file on GNU/Linux and MacOS.
 
 ``josm.package``
 ^^^^^^^^^^^^^^^^^^^
 
-This state will install JOSM package on MacOS (brew).
+This state will install JOSM package on GNU/Linux (package or snap) and MacOS (brew).
 
-``josm.jar``
-^^^^^^^^^^^^^
+``josm.macapp``
+^^^^^^^^^^^^^^^^
 
-This state will install JOSM script and jar on GNU/Linux (and MacOS)
+This state will install JOSM App on MacOS.
 
-``josm.package.clean``
+``josm.macapp.clean``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This state will remove JOSM package on MacOS (brew).
+This state will remove JOSM App on MacOS.
+
+``josm.package.clean``
+^^^^^^^^^^^^^^^^^^^^^^
+
+This state will remove JOSM package from GNU/Linux (package or snap) and MacOS (brew).
 
 ``josm.jar.clean``
 ^^^^^^^^^^^^^^^^^^
 
-This state will remove JOSM script (jar file) on GNU/Linux (and MacOS).
+This state will remove JOSM jar file from GNU/Linux and MacOS.
 
+``josm.config.clean``
+^^^^^^^^^^^^^^^^^^^^^^
+
+This state will remove JOSM configuration on GNU/Linux and MacOS.
+
+``josm.clean``
 ``josm.clean``
 ^^^^^^^^^^^^^^^^^
 

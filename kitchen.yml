@@ -171,3 +171,19 @@ suites:
     verifier:
       inspec_tests:
         - path: test/integration/default
+  - name: jar
+    provisioner:
+      state_top:
+        base:
+          '*':
+            - josm
+      pillars:
+        top.sls:
+          base:
+            '*':
+              - josm
+      pillars_from_files:
+        josm.sls: test/salt/jar/pillar.sls
+    verifier:
+      inspec_tests:
+        - path: test/integration/jar

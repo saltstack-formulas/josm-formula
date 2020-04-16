@@ -17,13 +17,14 @@
 %}
 {%- set josm = salt['grains.filter_by']( {'defaults': defaults}, default='defaults', merge=_config) %}
 {%- set url = '%s/%s/josm-%s.%s'|format(josm.pkg.uri, josm.pkg.tag, josm.version, josm.pkg.suffix) %}
+{%- set dir = '%s-%s'|format(josm.pkg.name, josm.version) %}
 
-{%- if josm['pkg']['use_upstream_jar'] %}
-       {%- set dir = '%s-%s'|format(josm.pkg.name, josm.version) %}
+{%- if josm.pkg.use_upstream_jar %}
        {%- do josm.config.update({'path': josm.dir.jar + '/' + dir }) %},
-       {%- do josm.pkg.jar.update({'name': josm.dir.jar, 'source': url }) %}
+       {%- do josm.pkg.jar.update({'name': josm.dir.jar + '/' + dir, 'source': url }) %}
 {%- endif %}
 
-{%- if eclipse.pkg.use_upstream_macapp %}
-       {%- do eclipse.pkg.macapp.update({ 'name': '/Applications', 'source': url }) %}
+{%- if josm.pkg.use_upstream_macapp %}
+       {%- do josm.config.update({'path': '/Applications' }) %},
+       {%- do josm.pkg.macapp.update({ 'name': '/Applications', 'source': url }) %}
 {%- endif %}
